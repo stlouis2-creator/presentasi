@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMA Katolik St. Louis 2 - Form Pendaftaran</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .slide-up {
+            animation: slideUp 0.3s ease-out;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .logo-preview {
+            max-width: 120px;
+            max-height: 80px;
+            object-fit: contain;
+        }
+        .bg-overlay {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 font-sans" id="mainBody">
+    
+    <!-- Default Background -->
+    <div id="defaultBackground" style="position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: url('background.jpg') no-repeat center center; background-size: cover; z-index: -2;">
+        <!-- Overlay -->
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.6);"></div>
+    </div>
+    
+    <!-- Default Logo and Text (hidden by default, shown when no custom logo) -->
+    <div id="defaultLogo" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: -1; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0.3;">
+        <img src="logo.png" alt="Logo SMA Katolik St. Louis 2" style="max-width: 200px; height: auto; margin-bottom: 20px;">
+        <h1 style="font-size: 2rem; font-weight: bold; color: #333; text-align: center;">SMA Katolik St. Louis 2</h1>
+    </div>
+
+
+    <!-- Password Modal -->
+    <div id="passwordModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md mx-4 fade-in">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Masukkan Password</h3>
+            <div class="space-y-4">
+                <input type="password" id="dashboardPassword" 
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                       placeholder="Password dashboard">
+                <div class="flex space-x-4">
+                    <button onclick="checkPassword()" 
+                            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                        Masuk
+                    </button>
+                    <button onclick="hidePasswordModal()" 
+                            class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                        Batal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Section -->
+    <div id="formSection" class="container mx-auto px-4 py-8">
+        <div class="max-w-md mx-auto">
+            <!-- Main Form Card -->
+            <div class="bg-white rounded-xl shadow-lg p-8 slide-up">
+                <!-- Logo Display -->
+                <div class="text-center mb-6">
+                    <img id="logoDisplay" src="" alt="" class="logo-preview mx-auto mb-4 hidden">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">SMA Katolik St. Louis 2</h2>
+                </div>
+                
+                <form id="studentForm" class="space-y-6">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap</label>
+                        <input type="text" id="name" name="name" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                               placeholder="Masukkan nama lengkap">
+                    </div>
+
+                    <div>
+                        <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Nomor Telepon</label>
+                        <input type="tel" id="phone" name="phone" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                               placeholder="Contoh: 08123456789">
+                    </div>
+
+                    <div>
+                        <label for="school" class="block text-sm font-medium text-gray-700 mb-2">Asal SMP</label>
+                        <input type="text" id="school" name="school" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                               placeholder="Nama SMP asal">
+                    </div>
+
+                    <button type="submit" 
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 transform hover:scale-105">
+                        Submit
+                    </button>
+                </form>
+                
+                <!-- Dashboard Button -->
+                <div class="mt-4 text-center">
+                    <button onclick="showDashboard()" 
+                            class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg transition-colors font-medium">
+                        Dashboard
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Section -->
+    <div id="dashboardSection" class="container mx-auto px-4 py-8 hidden">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-800">Dashboard Data Pendaftaran</h2>
+                <button onclick="showForm()" 
+                        class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg transition-colors">
+                    Exit
+                </button>
+            </div>
+            
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                    <div class="text-3xl font-bold text-blue-600" id="totalSubmissions">0</div>
+                    <div class="text-gray-600 mt-2">Total Pendaftar</div>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                    <div class="text-3xl font-bold text-green-600" id="satisfiedCount">0</div>
+                    <div class="text-gray-600 mt-2">Puas</div>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                    <div class="text-3xl font-bold text-red-600" id="notSatisfiedCount">0</div>
+                    <div class="text-gray-600 mt-2">Belum Puas</div>
+                </div>
+            </div>
+
+            <!-- Chart -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Tingkat Kepuasan</h3>
+                <div class="relative h-64">
+                    <canvas id="satisfactionChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
+                <h3 class="text-xl font-semibold text-gray-800 mb-6">Pengaturan</h3>
+                
+                <!-- Logo Upload -->
+                <div class="mb-8">
+                    <h4 class="text-lg font-medium text-gray-700 mb-4">Logo Sekolah</h4>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                        <input type="file" id="logoUpload" accept="image/*" class="hidden">
+                        <div class="space-y-4">
+                            <button onclick="document.getElementById('logoUpload').click()" 
+                                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors">
+                                Pilih Logo
+                            </button>
+                            <button onclick="saveLogo()" 
+                                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition-colors ml-4">
+                                Save
+                            </button>
+                        </div>
+                        <p class="text-gray-500 mt-2">Format: JPG, PNG (Maks. 2MB)</p>
+                        <div id="logoPreview" class="mt-4 hidden">
+                            <img id="logoPreviewImg" src="" alt="Logo Preview" class="logo-preview mx-auto">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Background Upload -->
+                <div class="mb-8">
+                    <h4 class="text-lg font-medium text-gray-700 mb-4">Background</h4>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                        <input type="file" id="backgroundUpload" accept="image/*" class="hidden">
+                        <div class="space-y-4">
+                            <button onclick="document.getElementById('backgroundUpload').click()" 
+                                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition-colors">
+                                Pilih Background
+                            </button>
+                            <button onclick="saveBackground()" 
+                                    class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg transition-colors ml-4">
+                                Save
+                            </button>
+                        </div>
+                        <p class="text-gray-500 mt-2">Format: JPG, PNG (Maks. 5MB)</p>
+                    </div>
+                </div>
+
+
+
+                <!-- Reset Data -->
+                <div>
+                    <h4 class="text-lg font-medium text-gray-700 mb-4">Reset Data</h4>
+                    <button onclick="resetAllData()" 
+                            class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg transition-colors">
+                        Reset Semua Data
+                    </button>
+                    <p class="text-gray-500 mt-2">Menghapus semua data pendaftaran yang tersimpan</p>
+                </div>
+            </div>
+
+            <!-- Data Table -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Data Pendaftaran</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full table-auto">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">Nama</th>
+                                <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">Telepon</th>
+                                <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">Asal SMP</th>
+                                <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">Kepuasan</th>
+                                <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">Waktu</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dataTableBody">
+                            <tr>
+                                <td colspan="5" class="px-4 py-8 text-center text-gray-500">Belum ada data pendaftaran</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Satisfaction Popup -->
+    <div id="satisfactionPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md mx-4 fade-in">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Bagaimana pengalaman Anda?</h3>
+            <div class="flex space-x-4">
+                <button onclick="submitSatisfaction('Puas')" 
+                        class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors transform hover:scale-105">
+                    😊 Puas
+                </button>
+                <button onclick="submitSatisfaction('Belum Puas')" 
+                        class="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors transform hover:scale-105">
+                    😞 Belum Puas
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div id="successMessage" class="fixed top-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg hidden fade-in">
+        Berhasil disimpan.
+    </div>
+
+    <script>
+        // Global variables
+        let currentFormData = {};
+        let satisfactionChart = null;
+        let GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwQ7uGRw9MY0IjgRzbLFqi8Yt_bGhkCwOCjLPgP2lJNaBir5jKTKHfXi6lV3vy9RbDx/exec';
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStoredAssets();
+            loadStoredData();
+            setupEventListeners();
+            showForm();
+        });
+
+        // Event Listeners
+        function setupEventListeners() {
+            // Form submission
+            document.getElementById('studentForm').addEventListener('submit', handleFormSubmit);
+            
+            // Enter key submission
+            document.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && document.getElementById('formSection').style.display !== 'none') {
+                    e.preventDefault();
+                    handleFormSubmit(e);
+                }
+            });
+
+            // File uploads
+            document.getElementById('logoUpload').addEventListener('change', handleLogoUpload);
+            document.getElementById('backgroundUpload').addEventListener('change', handleBackgroundUpload);
+
+            // Password modal enter key
+            document.getElementById('dashboardPassword').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkPassword();
+                }
+            });
+        }
+
+        // Navigation functions
+        function showForm() {
+            document.getElementById('formSection').classList.remove('hidden');
+            document.getElementById('dashboardSection').classList.add('hidden');
+        }
+
+        function showDashboard() {
+            document.getElementById('passwordModal').classList.remove('hidden');
+        }
+
+        function checkPassword() {
+            const password = document.getElementById('dashboardPassword').value;
+            if (password === '119119') {
+                document.getElementById('passwordModal').classList.add('hidden');
+                document.getElementById('formSection').classList.add('hidden');
+                document.getElementById('dashboardSection').classList.remove('hidden');
+                document.getElementById('dashboardPassword').value = '';
+                updateDashboard();
+            } else {
+                alert('Password salah!');
+                document.getElementById('dashboardPassword').value = '';
+            }
+        }
+
+        function hidePasswordModal() {
+            document.getElementById('passwordModal').classList.add('hidden');
+            document.getElementById('dashboardPassword').value = '';
+        }
+
+        // Form handling
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            currentFormData = {
+                name: formData.get('name'),
+                phone: formData.get('phone'),
+                school: formData.get('school'),
+                timestamp: new Date().toISOString()
+            };
+
+            // Show satisfaction popup
+            document.getElementById('satisfactionPopup').classList.remove('hidden');
+        }
+
+        function submitSatisfaction(satisfaction) {
+            currentFormData.satisfaction = satisfaction;
+            
+            // Hide popup
+            document.getElementById('satisfactionPopup').classList.add('hidden');
+            
+            // Save data locally
+            saveDataLocally(currentFormData);
+            
+            // Send to Google Sheets
+            sendToGoogleSheets(currentFormData);
+            
+            // Reset form
+            document.getElementById('studentForm').reset();
+            
+            // Show success message
+            showSuccessMessage();
+            
+            // Clear current form data
+            currentFormData = {};
+        }
+
+        function saveDataLocally(data) {
+            let storedData = JSON.parse(localStorage.getItem('registrationData') || '[]');
+            storedData.push(data);
+            localStorage.setItem('registrationData', JSON.stringify(storedData));
+        }
+
+        function sendToGoogleSheets(data) {
+            if (!GOOGLE_SCRIPT_URL) {
+                console.log('Google Sheets URL not configured');
+                return;
+            }
+            
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            }).then(() => {
+                console.log('Data sent to Google Sheets successfully');
+            }).catch(error => {
+                console.log('Error sending to Google Sheets:', error);
+            });
+        }
+
+        function showSuccessMessage() {
+            const message = document.getElementById('successMessage');
+            message.classList.remove('hidden');
+            setTimeout(() => {
+                message.classList.add('hidden');
+            }, 3000);
+        }
+
+        // Asset management
+        let tempLogoData = null;
+        let tempBackgroundData = null;
+        
+        function handleLogoUpload(e) {
+            const file = e.target.files[0];
+            if (file && file.size <= 2 * 1024 * 1024) { // 2MB limit
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    tempLogoData = e.target.result;
+                    
+                    // Update preview only
+                    document.getElementById('logoPreviewImg').src = tempLogoData;
+                    document.getElementById('logoPreview').classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('File terlalu besar. Maksimal 2MB.');
+            }
+        }
+        
+        function saveLogo() {
+            if (tempLogoData) {
+                // Store in localStorage for immediate use
+                localStorage.setItem('schoolLogo', tempLogoData);
+                
+                // Send to Google Sheets for permanent storage
+                sendAssetToGoogleSheets('logo', tempLogoData);
+                
+                // Update main logo
+                document.getElementById('logoDisplay').src = tempLogoData;
+                document.getElementById('logoDisplay').classList.remove('hidden');
+                
+                alert('Logo berhasil disimpan!');
+                tempLogoData = null;
+            } else {
+                alert('Pilih logo terlebih dahulu.');
+            }
+        }
+
+        function handleBackgroundUpload(e) {
+            const file = e.target.files[0];
+            if (file && file.size <= 5 * 1024 * 1024) { // 5MB limit
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    tempBackgroundData = e.target.result;
+                    alert('Background dipilih. Klik Save untuk menyimpan.');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('File terlalu besar. Maksimal 5MB.');
+            }
+        }
+        
+        function saveBackground() {
+            if (tempBackgroundData) {
+                // Store in localStorage for immediate use
+                localStorage.setItem('schoolBackground', tempBackgroundData);
+                
+                // Send to Google Sheets for permanent storage
+                sendAssetToGoogleSheets('background', tempBackgroundData);
+                
+                // Apply background
+                document.getElementById('mainBody').style.backgroundImage = `url(${tempBackgroundData})`;
+                document.getElementById('mainBody').classList.add('bg-overlay');
+                
+                alert('Background berhasil disimpan!');
+                tempBackgroundData = null;
+            } else {
+                alert('Pilih background terlebih dahulu.');
+            }
+        }
+
+        function sendAssetToGoogleSheets(type, data) {
+            if (!GOOGLE_SCRIPT_URL) {
+                console.log('Google Sheets URL not configured');
+                return;
+            }
+            
+            const assetData = {
+                type: 'asset',
+                assetType: type,
+                data: data,
+                timestamp: new Date().toISOString()
+            };
+            
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(assetData)
+            }).then(() => {
+                console.log(`${type} asset sent to Google Sheets successfully`);
+            }).catch(error => {
+                console.log(`Error sending ${type} asset to Google Sheets:`, error);
+            });
+        }
+
+        function loadStoredAssets() {
+            // First try to load from localStorage for immediate display
+            const storedLogo = localStorage.getItem('schoolLogo');
+            if (storedLogo) {
+                document.getElementById('logoDisplay').src = storedLogo;
+                document.getElementById('logoDisplay').classList.remove('hidden');
+                document.getElementById('logoPreviewImg').src = storedLogo;
+                document.getElementById('logoPreview').classList.remove('hidden');
+            }
+
+            const storedBackground = localStorage.getItem('schoolBackground');
+            if (storedBackground) {
+                document.getElementById('mainBody').style.backgroundImage = `url(${storedBackground})`;
+                document.getElementById('mainBody').classList.add('bg-overlay');
+            }
+
+            // Then try to load from Google Sheets for cross-browser persistence
+            loadAssetsFromGoogleSheets();
+        }
+
+        function loadAssetsFromGoogleSheets() {
+            if (!GOOGLE_SCRIPT_URL) {
+                console.log('Google Sheets URL not configured');
+                return;
+            }
+            
+            // Request assets from Google Sheets
+            fetch(`${GOOGLE_SCRIPT_URL}?action=getAssets`, {
+                method: 'GET',
+                mode: 'cors'
+            }).then(response => response.json())
+            .then(data => {
+                if (data.logo) {
+                    localStorage.setItem('schoolLogo', data.logo);
+                    document.getElementById('logoDisplay').src = data.logo;
+                    document.getElementById('logoDisplay').classList.remove('hidden');
+                    document.getElementById('logoPreviewImg').src = data.logo;
+                    document.getElementById('logoPreview').classList.remove('hidden');
+                }
+                
+                if (data.background) {
+                    localStorage.setItem('schoolBackground', data.background);
+                    document.getElementById('mainBody').style.backgroundImage = `url(${data.background})`;
+                    document.getElementById('mainBody').classList.add('bg-overlay');
+                }
+            }).catch(error => {
+                console.log('Could not load assets from Google Sheets, using localStorage only:', error);
+            });
+        }
+
+        function loadDataFromGoogleSheets() {
+            if (!GOOGLE_SCRIPT_URL) {
+                console.log('Google Sheets URL not configured');
+                return;
+            }
+            
+            // Request data from Google Sheets
+            fetch(`${GOOGLE_SCRIPT_URL}?action=getData`, {
+                method: 'GET',
+                mode: 'cors'
+            }).then(response => response.json())
+            .then(data => {
+                if (data && data.length > 0) {
+                    localStorage.setItem('registrationData', JSON.stringify(data));
+                }
+            }).catch(error => {
+                console.log('Could not load data from Google Sheets, using localStorage only:', error);
+            });
+        }
+
+        // Dashboard functions
+        function loadStoredData() {
+            // First load from localStorage
+            let data = JSON.parse(localStorage.getItem('registrationData') || '[]');
+            
+            // Also try to load from Google Sheets
+            loadDataFromGoogleSheets();
+            
+            return data;
+        }
+
+        function updateDashboard() {
+            const data = loadStoredData();
+            
+            // Update stats
+            const total = data.length;
+            const satisfied = data.filter(item => item.satisfaction === 'Puas').length;
+            const notSatisfied = data.filter(item => item.satisfaction === 'Belum Puas').length;
+            
+            document.getElementById('totalSubmissions').textContent = total;
+            document.getElementById('satisfiedCount').textContent = satisfied;
+            document.getElementById('notSatisfiedCount').textContent = notSatisfied;
+            
+            // Update chart
+            updateChart(satisfied, notSatisfied);
+            
+            // Update table
+            updateTable(data);
+        }
+
+        function updateChart(satisfied, notSatisfied) {
+            const ctx = document.getElementById('satisfactionChart').getContext('2d');
+            
+            if (satisfactionChart) {
+                satisfactionChart.destroy();
+            }
+            
+            satisfactionChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Puas', 'Belum Puas'],
+                    datasets: [{
+                        data: [satisfied, notSatisfied],
+                        backgroundColor: ['#10B981', '#EF4444'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateTable(data) {
+            const tbody = document.getElementById('dataTableBody');
+            
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-8 text-center text-gray-500">Belum ada data pendaftaran</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = data.map(item => `
+                <tr class="border-t">
+                    <td class="px-4 py-3 text-sm text-gray-900">${item.name}</td>
+                    <td class="px-4 py-3 text-sm text-gray-900">${item.phone}</td>
+                    <td class="px-4 py-3 text-sm text-gray-900">${item.school}</td>
+                    <td class="px-4 py-3 text-sm">
+                        <span class="px-2 py-1 rounded-full text-xs font-medium ${
+                            item.satisfaction === 'Puas' 
+                                ? 'bg-green-100 text-green-800' 
+                                : 'bg-red-100 text-red-800'
+                        }">
+                            ${item.satisfaction}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 text-sm text-gray-500">
+                        ${new Date(item.timestamp).toLocaleDateString('id-ID')}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Settings functions
+
+        function resetAllData() {
+            if (confirm('Apakah Anda yakin ingin menghapus semua data? Tindakan ini tidak dapat dibatalkan.')) {
+                localStorage.removeItem('registrationData');
+                alert('Semua data berhasil dihapus.');
+                updateDashboard();
+            }
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96dc70b8d23aea85',t:'MTc1NDk2NDY2OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
+
